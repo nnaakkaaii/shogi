@@ -5,7 +5,6 @@ from . import board as b
 from . import game as g
 from . import pieces as p
 
-
 # 手番2 * 駒の種類14 = 28
 NUM_FEATURES_ON_BOARD_PER_SQUARE = g.NUM_TURNS * p.NUM_ALL_PIECE_TYPES
 # 手番2 * 持ち駒数38 = 76

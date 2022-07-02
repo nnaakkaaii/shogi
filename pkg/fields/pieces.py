@@ -1,8 +1,5 @@
 import cshogi
 
-from .game import NUM_TURNS
-
-
 PIECES = {
     cshogi.PAWN: 9,  # 歩(1)
     cshogi.LANCE: 2,  # 香車(2)

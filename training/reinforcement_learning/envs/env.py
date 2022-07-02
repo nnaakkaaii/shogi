@@ -23,9 +23,9 @@ class ShogiEnv(gym.Env):
         self.action_space = gym.spaces.Discrete(act.NUM_FEATURES)  # sample()は非合法手も含む
 
     def reset(self, sfen=None, hcp=None):
-        if not sfen is None:
+        if sfen is not None:
             self.board.set_sfen(sfen)
-        elif not hcp is None:
+        elif hcp is not None:
             self.board.set_hcp(hcp)
         else:
             self.board.reset()
