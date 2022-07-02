@@ -23,6 +23,9 @@ GAMMA = 0.7
 BATCH_SIZE = 512
 OPTIMIZE_PER_EPISODES = 2
 TARGET_UPDATE = 10
+MAX_MOVES = 512
+VERSION = "1.0.0"
+SAVE_DIR = os.path.join('kifu', VERSION)
 
 
 def optimize_model():
@@ -42,7 +45,7 @@ def optimize_model():
     non_final_next_actions_list = []
     for next_actions in batch.next_actions:
         if next_actions is not None:
-            non_final_next_actions_list.append(next_actions + [next_actions[0]] * (593 - len(next_actions)))
+            non_final_next_actions_list.append(next_actions + [next_actions[0]] * (593 - len(next_actions)))  # FIXME : length=593
     non_final_next_actions = torch.tensor(non_final_next_actions_list, device=device, dtype=torch.long)
 
     # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
@@ -74,17 +77,25 @@ def optimize_model():
 
 def train():
     # 棋譜保存用
-    os.makedirs('kifu', exist_ok=True)
+    os.makedirs(SAVE_DIR, exist_ok=True)
+    os.makedirs(os.path.join(SAVE_DIR, 'train'), exist_ok=True)
     kif = KIF.Exporter()
 
-    num_episodes = 1000
-    max_moves = 512
+    net_path = os.path.join(SAVE_DIR, f'net_last.pth')
+
+    if os.path.isfile(net_path):
+        state_dict = torch.load(net_path)
+        policy_net.load_state_dict(state_dict)
+        target_net.load_state_dict(state_dict)
+
+    num_episodes = 10000
+
     for i_episode in range(num_episodes):
         # Initialize the environment and state
         env.reset()
         state = get_state(env, device=device)
         # env.render('sfen')
-        kif.open(os.path.join('kifu', datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.kifu'))
+        kif.open(os.path.join(SAVE_DIR, 'train', datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.kifu'))
         kif.header(['dqn', 'dqn'])
 
         for t in count():
@@ -97,7 +108,7 @@ def train():
                 reward = 1.0
                 done = True
             # 持将棋の場合
-            if t + 1 == max_moves:
+            if t + 1 == MAX_MOVES:
                 done = True
 
             reward = torch.tensor([reward], device=device)
@@ -120,7 +131,7 @@ def train():
                     kif.end('illegal_win')
                 elif is_draw == cshogi.REPETITION_LOSE:
                     kif.end('illegal_lose')
-                elif t + 1 == max_moves:
+                elif t + 1 == MAX_MOVES:
                     kif.end('draw')
                 else:
                     kif.end('resign')
@@ -141,7 +152,9 @@ def train():
 
             # Update the target network, copying all weights and biases in DQN
             if i_episode // OPTIMIZE_PER_EPISODES % TARGET_UPDATE == 0:
-                target_net.load_state_dict(policy_net.state_dict())
+                state_dict = policy_net.state_dict()
+                target_net.load_state_dict(state_dict)
+                torch.save(state_dict, net_path)
 
     print('Complete')
     env.close()

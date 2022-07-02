@@ -23,27 +23,28 @@ AVAILABLE_PIECES = {
 }
 NUM_AVAILABLE_PIECES = sum(AVAILABLE_PIECES.values())
 
-PIECE_TYPES = (
-    cshogi.PAWN,
-    cshogi.LANCE,
-    cshogi.KNIGHT,
-    cshogi.SILVER,
-    cshogi.GOLD,
-    cshogi.BISHOP,
-    cshogi.ROOK,
-    cshogi.KING,
-)
+PIECE_TYPES = {
+    cshogi.PAWN: 'FU',
+    cshogi.LANCE: 'KY',
+    cshogi.KNIGHT: 'KE',
+    cshogi.SILVER: 'GI',
+    cshogi.GOLD: 'KI',
+    cshogi.BISHOP: 'HI',
+    cshogi.ROOK: 'KA',
+    cshogi.KING: 'OU',
+}
 NUM_PIECE_TYPES = len(PIECE_TYPES)
 
-PROM_PIECE_TYPES = (
-    cshogi.PROM_PAWN,
-    cshogi.PROM_LANCE,
-    cshogi.PROM_KNIGHT,
-    cshogi.PROM_SILVER,
-    cshogi.PROM_BISHOP,
-    cshogi.PROM_ROOK,
-)
+PROM_PIECE_TYPES = {
+    cshogi.PROM_PAWN: 'TO',
+    cshogi.PROM_LANCE: 'NY',
+    cshogi.PROM_KNIGHT: 'NK',
+    cshogi.PROM_SILVER: 'NG',
+    cshogi.PROM_BISHOP: 'RY',
+    cshogi.PROM_ROOK: 'UM',
+}
 NUM_PROM_PIECE_TYPES = len(PROM_PIECE_TYPES)
 
-ALL_PIECE_TYPES = PIECE_TYPES + PROM_PIECE_TYPES
+ALL_PIECE_TYPES = PIECE_TYPES | PROM_PIECE_TYPES
+PIECE_TYPES_TO_CSA = {v: k for k, v in ALL_PIECE_TYPES.items()}
 NUM_ALL_PIECE_TYPES = NUM_PIECE_TYPES + NUM_PROM_PIECE_TYPES
