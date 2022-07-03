@@ -1,7 +1,8 @@
 import random
+
 import cshogi
-import torch
 import numpy as np
+import torch
 
 from pkg.fields import states as sts
 
@@ -27,7 +28,7 @@ def get_hcp(hcp_files):
             index = random.randint(0, len(hcp_files) - 1)
             hcp_file = hcp_files[index]
             hcpes = np.fromfile(hcp_file, dtype=cshogi.HuffmanCodedPosAndEval)
-        
+
         ret = hcpes[hcp_index]
         hcp_index += 1
 

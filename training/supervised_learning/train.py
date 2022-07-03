@@ -60,7 +60,7 @@ def train():
     hcp_files = glob(os.path.join(HCP_DIR, '*.hcpe'))
     iterator = iter(get_hcp(hcp_files))
 
-    num_iterations = 10000000
+    num_iterations = 100000000
 
     for i in range(num_iterations):
         hcp = next(iterator)
@@ -79,7 +79,6 @@ def train():
                 print(f'loss = {loss}')
                 state_dict = net.state_dict()
                 torch.save(state_dict, net_path)
-
 
 
 if __name__ == '__main__':

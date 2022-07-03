@@ -1,4 +1,3 @@
-import cshogi
 import torch
 
 from pkg.fields import actions as act
