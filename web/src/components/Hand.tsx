@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box"
 import { styled } from '@mui/material/styles';
-import { lime } from "@mui/material/colors"
 import HandSquare from "./HandSquare";
 import { FC } from "react";
 import { useRecoilValue } from "recoil";
@@ -27,15 +26,31 @@ const HandRow: FC<HandRowProps> = ({rotate, piece}) => {
     if (rotate) {
         return (
             <div key={piece.name}>
-                <HandSquare text={piece.name} rotate={rotate} onClick={() => {}} />
-                <HandSquare text={piece.count.toString()} rotate={rotate} onClick={() => {}} />
+                <HandSquare
+                    text={piece.name}
+                    rotate={rotate}
+                    onClick={() => {}}
+                />
+                <HandSquare
+                    text={piece.count.toString()}
+                    rotate={rotate}
+                    onClick={() => {}}
+                />
             </div>
         )
     } else {
         return (
             <div key={piece.name}>
-                <HandSquare text={piece.count.toString()} rotate={rotate} onClick={() => {}} />
-                <HandSquare text={piece.name} rotate={rotate} onClick={() => {}} />
+                <HandSquare
+                    text={piece.count.toString()}
+                    rotate={rotate}
+                    onClick={() => {}}
+                />
+                <HandSquare
+                    text={piece.name}
+                    rotate={rotate}
+                    onClick={() => {}}
+                />
             </div>
         )
     }
