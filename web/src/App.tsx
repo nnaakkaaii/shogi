@@ -1,11 +1,15 @@
-import React from 'react';
-import './App.css';
+import { RecoilRoot } from 'recoil';
+import Field from './components/Field';
+import Header from './components/Header';
 
 function App() {
   return (
-    <div className="App">
-      <p>Hello</p>
-    </div>
+    <RecoilRoot>
+      <div className="App">
+        <Header />
+        <Field />
+      </div>
+    </RecoilRoot>
   );
 }
 
