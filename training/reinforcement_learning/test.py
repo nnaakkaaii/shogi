@@ -9,7 +9,7 @@ from cshogi import KIF
 
 from pkg import envs
 from pkg.networks.cnn import CNN
-from pkg.policies.epsilon_greedy import EpsilonGreedy
+from pkg.policies.softmax import Softmax
 from pkg.utils.data import get_state_from_env
 from pkg.utils.select_action import SelectAction
 
@@ -75,6 +75,6 @@ if __name__ == '__main__':
     device = torch.device("cpu")
     policy_net = CNN().to(device)
     env = gym.make('shogi-v0').unwrapped
-    policy = EpsilonGreedy(policy_net)
+    policy = Softmax(policy_net)
     select_action = SelectAction(policy, device=device)
     test()
