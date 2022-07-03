@@ -8,8 +8,16 @@ python3.9
 
 ### 強化学習
 
+学習
+
 ```shell
 $ PYTHONPATH=. python3 training/reinforcement_learning/train.py
+```
+
+推論
+
+```shell
+$ PYTHONPATH=. python3 training/reinforcement_learning/test.py
 ```
 
 ### 教師あり学習
