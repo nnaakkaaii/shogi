@@ -1,0 +1,5 @@
+.venv
+kifu/*/test
+kifu/*/train
+kifu/hcp
+**/__pycache__
