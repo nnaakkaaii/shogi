@@ -15,15 +15,24 @@ NUM_FEATURES_PER_SQUARE = NUM_FEATURES_ON_BOARD_PER_SQUARE + NUM_FEATURES_ON_HAN
 NUM_FEATURES = b.NUM_SQUARES * NUM_FEATURES_PER_SQUARE
 
 
-def load_state(env):
+def load_state_from_env(env):
     arr = np.zeros((1, NUM_FEATURES_PER_SQUARE, b.NUM_ROWS, b.NUM_COLUMNS), dtype=np.float32)
     # 最初の14*2チャンネルに盤上の駒の配置を記録
-    env.board.piece_planes_rotate(arr)  
+    env.board.piece_planes_rotate(arr)
     # 次の38*2チャンネルに手駒を記録
     pieces_in_hand = env.board.pieces_in_hand
     piece_hands_rotate(arr, pieces_in_hand, turn=env.board.turn)
     # 繰り返し数を記録
     arr[0, -1].fill(env.repetition_hash[env.board.zobrist_hash()] / g.MAX_REPETITIONS)
+    return arr
+
+
+def load_state_from_board(board):
+    arr = np.zeros((1, NUM_FEATURES_PER_SQUARE, b.NUM_ROWS, b.NUM_COLUMNS), dtype=np.float32)
+    board.piece_planes_rotate(arr)
+    pieces_in_hand = board.pieces_in_hand
+    piece_hands_rotate(arr, pieces_in_hand, turn=board.turn)
+    arr[0, -1].fill(0.)
     return arr
 
 

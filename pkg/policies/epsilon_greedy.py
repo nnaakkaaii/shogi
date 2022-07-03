@@ -21,10 +21,7 @@ class EpsilonGreedy(BasePolicy):
         if sample > eps_threshold:
             with torch.no_grad():
                 q = self.net(state)
-                try:
-                    value, select = q[0, legal_labels].max(0)
-                except:
-                    assert False, legal_labels
+                value, select = q[0, legal_labels].max(0)
                 score = int(-math.log(1 / ((torch.clamp(value, -0.99, 0.99).item() + 1) / 2) - 1) * 600)
         else:
             select = random.randrange(len(legal_labels))

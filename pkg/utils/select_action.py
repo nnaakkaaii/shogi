@@ -5,7 +5,7 @@ from pkg.fields import actions as act
 from ..policies.base import BasePolicy
 
 
-class SelectAction(BasePolicy):
+class SelectAction:
     def __init__(self, policy: BasePolicy, device=torch.device('cpu')):
         self.steps_done = 0
         self.policy = policy

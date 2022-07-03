@@ -9,15 +9,14 @@ import torch.nn.functional as F
 import torch.optim as optim
 from cshogi import KIF
 
+from pkg import envs
 from pkg.fields import actions as act
-
-from . import envs
-from .networks.cnn import CNN
-from .policies.epsilon_greedy import EpsilonGreedy
-from .utils.data import get_state
-from .utils.replay_memory import ReplayMemory
-from .utils.select_action import SelectAction
-from .utils.transition import Transition
+from pkg.networks.cnn import CNN
+from pkg.policies.epsilon_greedy import EpsilonGreedy
+from pkg.utils.data import get_state_from_env
+from pkg.utils.replay_memory import ReplayMemory
+from pkg.utils.select_action import SelectAction
+from pkg.utils.transition import Transition
 
 GAMMA = 0.7
 BATCH_SIZE = 512
@@ -41,11 +40,13 @@ def optimize_model():
     action_batch = torch.cat(batch.action)
     reward_batch = torch.cat(batch.reward)
 
+    assert 0 <= action_batch.min() and action_batch.max() < act.NUM_FEATURES
+
     # 合法手のみ
     non_final_next_actions_list = []
     for next_actions in batch.next_actions:
         if next_actions is not None:
-            non_final_next_actions_list.append(next_actions + [next_actions[0]] * (593 - len(next_actions)))  # FIXME : length=593
+            non_final_next_actions_list.append(next_actions + [next_actions[0]] * (593 - len(next_actions)))
     non_final_next_actions = torch.tensor(non_final_next_actions_list, device=device, dtype=torch.long)
 
     # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
@@ -81,7 +82,7 @@ def train():
     os.makedirs(os.path.join(SAVE_DIR, 'train'), exist_ok=True)
     kif = KIF.Exporter()
 
-    net_path = os.path.join(SAVE_DIR, f'net_last.pth')
+    net_path = os.path.join(SAVE_DIR, 'net_last.pth')
 
     if os.path.isfile(net_path):
         state_dict = torch.load(net_path)
@@ -93,7 +94,7 @@ def train():
     for i_episode in range(num_episodes):
         # Initialize the environment and state
         env.reset()
-        state = get_state(env, device=device)
+        state = get_state_from_env(env, device=device)
         # env.render('sfen')
         kif.open(os.path.join(SAVE_DIR, 'train', datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.kifu'))
         kif.header(['dqn', 'dqn'])
@@ -115,7 +116,7 @@ def train():
 
             # Observe new state
             if not done:
-                next_state = get_state(env, device=device)
+                next_state = get_state_from_env(env, device=device)
                 next_actions = act.get_legal_labels(env.board)
             else:
                 next_state = None
@@ -165,7 +166,7 @@ if __name__ == '__main__':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     policy_net = CNN().to(device)
     target_net = CNN().to(device)
-    optimizer = optimizer = optim.RMSprop(policy_net.parameters(), lr=1e-5)
+    optimizer = optim.RMSprop(policy_net.parameters(), lr=1e-5)
     env = gym.make('shogi-v0').unwrapped
     policy = EpsilonGreedy(policy_net)
     select_action = SelectAction(policy, device=device)

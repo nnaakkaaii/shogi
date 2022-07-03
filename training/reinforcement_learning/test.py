@@ -1,5 +1,5 @@
-import os
 import datetime
+import os
 from itertools import count
 
 import cshogi
@@ -7,17 +7,17 @@ import gym
 import torch
 from cshogi import KIF
 
-from . import envs
-from .networks.cnn import CNN
-from .policies.epsilon_greedy import EpsilonGreedy
-from .utils.data import get_state
-from .utils.select_action import SelectAction
+from pkg import envs
+from pkg.networks.cnn import CNN
+from pkg.policies.epsilon_greedy import EpsilonGreedy
+from pkg.utils.data import get_state_from_env
+from pkg.utils.select_action import SelectAction
 
-
-VERSION = "1.0.0"
+VERSION = "2.0.0"
 SAVE_DIR = os.path.join('kifu', VERSION)
 
 MAX_MOVES = 512
+
 
 def test():
     kif = KIF.Exporter()
@@ -27,7 +27,7 @@ def test():
     policy_net.load_state_dict(state_dict)
 
     env.reset()
-    state = get_state(env, device=device)
+    state = get_state_from_env(env, device=device)
 
     os.makedirs(os.path.join(SAVE_DIR, 'test'), exist_ok=True)
     kif.open(os.path.join(SAVE_DIR, 'test', datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.kifu'))
@@ -62,12 +62,11 @@ def test():
                 kif.end('resign')
                 print('投了')
 
-
         if done:
             print(f'{t}手にて終了')
             break
 
-        next_state = get_state(env, device=device)
+        next_state = get_state_from_env(env, device=device)
 
         state = next_state
 
