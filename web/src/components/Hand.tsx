@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box"
 import { styled } from '@mui/material/styles';
 import HandSquare from "./HandSquare";
-import { FC } from "react";
-import { useRecoilValue } from "recoil";
+import { FC, MouseEvent } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { myHandPieceState, yourHandPieceState } from "../states/handPieceState";
+import pieceState from "../states/pieceState";
 
 const MyBox = styled(Box)({
     minWidth: '100px',
@@ -12,80 +13,131 @@ const MyBox = styled(Box)({
     maxHeight: '350px',
 });
 
-interface Piece {
-    name: string,
-    count: number,
-}
-
 interface HandRowProps {
-    rotate: boolean,
-    piece: Piece,
+    name: string
 }
 
-const HandRow: FC<HandRowProps> = ({rotate, piece}) => {
-    if (rotate) {
-        return (
-            <div key={piece.name}>
-                <HandSquare
-                    text={piece.name}
-                    rotate={rotate}
-                    onClick={() => {}}
-                />
-                <HandSquare
-                    text={piece.count.toString()}
-                    rotate={rotate}
-                    onClick={() => {}}
-                />
-            </div>
-        )
-    } else {
-        return (
-            <div key={piece.name}>
-                <HandSquare
-                    text={piece.count.toString()}
-                    rotate={rotate}
-                    onClick={() => {}}
-                />
-                <HandSquare
-                    text={piece.name}
-                    rotate={rotate}
-                    onClick={() => {}}
-                />
-            </div>
-        )
+const MyHandRow: FC<HandRowProps> = ({name}) => {
+    const [pieces, setPieces] = useRecoilState(pieceState);
+    const [myHandPieces, setMyHandPieces] = useRecoilState(myHandPieceState)
+
+    const onClick: (event: MouseEvent) => void = (event) => {
+        let from = -1;
+        for (let i = 0; i < pieces.length; i++) {
+            if (pieces[i].isClicked) {
+                from = i;
+            }
+        }
+        // piece is already clicked
+        if (from !== -1) {
+            setPieces([
+                ...pieces.slice(0, from),
+                {
+                    text: pieces[from].text,
+                    rotate: pieces[from].rotate,
+                    isClicked: false,
+                },
+                ...pieces.slice(from + 1),
+            ])
+            return
+        }
+        let hand = "";
+        for (let k in myHandPieces) {
+            if (myHandPieces[k].isClicked) {
+                hand = myHandPieces[k].name
+            }
+        }
+        // hand piece is already clicked
+        if (hand !== "") {
+            setMyHandPieces({
+                ...myHandPieces,
+                [hand]: {
+                    name: hand,
+                    count: myHandPieces[hand].count,
+                    isClicked: false,
+                }
+            })
+            return
+        }
+        if (myHandPieces[name].count === 0) {
+            return
+        }
+        setMyHandPieces((prevMyHandPieces) => ({
+            ...prevMyHandPieces,
+            [name]: {
+                name: prevMyHandPieces[name].name,
+                count: prevMyHandPieces[name].count,
+                isClicked: !prevMyHandPieces[name].isClicked,
+            },
+        }))
     }
+
+    return (
+        <div key={name}>
+            <HandSquare
+                text={name}
+                rotate={false}
+                onClick={onClick}
+                isClicked={myHandPieces[name].isClicked}
+            />
+            <HandSquare
+                text={myHandPieces[name].count.toString()}
+                rotate={false}
+                onClick={() => {}}
+                isClicked={false}
+            />
+        </div>
+    )
+}
+
+const YourHandRow: FC<HandRowProps> = ({name}) => {
+    const yourHandPieces = useRecoilValue(yourHandPieceState)
+
+    return (
+        <div key={name}>
+            <HandSquare
+                text={name}
+                rotate={false}
+                onClick={() => {}}
+                isClicked={false}
+            />
+            <HandSquare
+                text={yourHandPieces[name].count.toString()}
+                rotate={false}
+                onClick={() => {}}
+                isClicked={false}
+            />
+        </div>
+    )
 }
 
 export const MyHand = () => {
-    const pieces = useRecoilValue(myHandPieceState)
-
     return (
         <>
             <MyBox >
-                <HandRow rotate={false} piece={pieces['歩']} />
-                <HandRow rotate={false} piece={pieces['香']} />
-                <HandRow rotate={false} piece={pieces['桂']} />
-                <HandRow rotate={false} piece={pieces['銀']} />
-                <HandRow rotate={false} piece={pieces['金']} />
-                <HandRow rotate={false} piece={pieces['角']} />
-                <HandRow rotate={false} piece={pieces['飛']} />
+                <MyHandRow name={'歩'} />
+                <MyHandRow name={'香'} />
+                <MyHandRow name={'桂'} />
+                <MyHandRow name={'銀'} />
+                <MyHandRow name={'金'} />
+                <MyHandRow name={'角'} />
+                <MyHandRow name={'飛'} />
             </MyBox>
         </>
     )
 }
 
 export const YourHand = () => {
-    const pieces = useRecoilValue(yourHandPieceState)
     return (
         <>
             <MyBox >
-                <HandRow rotate={true} piece={pieces['飛']} />
-                <HandRow rotate={true} piece={pieces['角']} />
-                <HandRow rotate={true} piece={pieces['金']} />
-                <HandRow rotate={true} piece={pieces['銀']} />
-                <HandRow rotate={true} piece={pieces['桂']} />
-                <HandRow rotate={true} piece={pieces['香']} />
-                <HandRow rotate={true} piece={pieces['歩']} />
+                <YourHandRow name={'飛'} />
+                <YourHandRow name={'角'} />
+                <YourHandRow name={'金'} />
+                <YourHandRow name={'銀'} />
+                <YourHandRow name={'桂'} />
+                <YourHandRow name={'香'} />
+                <YourHandRow name={'歩'} />
             </MyBox>
         </>
     ) 

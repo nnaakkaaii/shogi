@@ -390,7 +390,7 @@ const pieceState = atom<PieceProps[]>({
       isClicked: false,
     },
     {
-      text: '玉',
+      text: '王',
       rotate: false,
       isClicked: false,
     },

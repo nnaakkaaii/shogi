@@ -2,9 +2,12 @@ import { Button, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import newGameState from '../states/newGameState';
-import { useSetRecoilState } from 'recoil';
-import React, { useCallback } from 'react';
-import finishGameState from '../states/finishGameState';
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
+import React, { useCallback, useEffect } from 'react';
+import pieceState from '../states/pieceState';
+import { myHandPieceState, yourHandPieceState } from '../states/handPieceState';
+import historyState from '../states/historyState';
+import moveState from '../states/moveState';
 
 const MyAppBar = styled(AppBar)({
     flexGrow: 1,
@@ -16,8 +19,23 @@ const MyButton = styled(Button)({
 })
 
 const Header = () => {
-    const setNewGame = useSetRecoilState(newGameState);
-    const setFinishGame = useSetRecoilState(finishGameState);
+    const [newGame, setNewGame] = useRecoilState(newGameState);
+    const resetPieces = useResetRecoilState(pieceState);
+    const resetMyHandPieces = useResetRecoilState(myHandPieceState);
+    const resetYourHandPieces = useResetRecoilState(yourHandPieceState);
+    const resetHistory = useResetRecoilState(historyState);
+    const resetMove = useResetRecoilState(moveState);
+
+    useEffect(() => {
+        if (newGame) {
+            setNewGame(false)
+            resetPieces()
+            resetMyHandPieces()
+            resetYourHandPieces()
+            resetHistory()
+            resetMove()
+        }
+    }, [newGame])
 
     const onClickNewGame = useCallback(
         (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,10 +46,9 @@ const Header = () => {
 
     const onClickFinishGame = useCallback(
         (event: React.MouseEvent<HTMLButtonElement>) => {
-            setFinishGame('投了');
             setNewGame(true);
         },
-        [setNewGame, setFinishGame]
+        [setNewGame]
     )
 
     return (

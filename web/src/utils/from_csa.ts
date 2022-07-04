@@ -15,15 +15,16 @@ const map: {[key: string]: string} = {
     'UM': '馬' ,
 }
 
-const to_csa = (csa: string): [number, number, string] => {
+const to_csa = (csa: string): [number, number, string, boolean] => {
     const i = Number(csa[0]);
     const j = Number(csa[1]);
+    const fromHand = (i === 0 && j === 0);
     const k = Number(csa[2]);
     const l = Number(csa[3]);
     const ij = (9-i) + (j-1)*9;
     const kl = (9-k) + (l-1)*9;
     const name = map[csa.slice(4)];
-    return [ij, kl, name]
+    return [ij, kl, name, fromHand]
 }
 
 export default to_csa;

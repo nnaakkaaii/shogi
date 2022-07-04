@@ -7,11 +7,11 @@ export type SquareProps = {
     text: string,
     rotate: boolean,
     onClick: React.MouseEventHandler<HTMLButtonElement>,
+    isClicked: boolean,
 };
 
 const MyButton = styled(Button)({
     boxShadow: 'none',
-    backgroundColor: lime['200'],
     color: grey['900'],
     fontWeight: 'bold',
     fontSize: '25px',
@@ -25,13 +25,14 @@ const MyButton = styled(Button)({
 })
 
 const HandSquare: React.FC<SquareProps> = (props: SquareProps) => {
-    const { text, rotate, onClick } = props;
+    const { text, rotate, onClick, isClicked } = props;
 
     return (
         <MyButton
             variant={"contained"}
             style={{
                 transform: rotate ? 'rotate(180deg)' : 'none',
+                backgroundColor: isClicked ? lime['400'] : lime['200'],
             }}
             onClick={onClick}
         >

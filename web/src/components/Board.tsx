@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { errorSelector, useRecoilState } from "recoil";
 import { myHandPieceState, Piece, yourHandPieceState } from "../states/handPieceState";
 import moveState from "../states/moveState";
 import pieceState, { PieceProps } from "../states/pieceState";
@@ -12,6 +12,7 @@ import promote from "../utils/promote";
 import axios from "axios";
 import { API_URL } from "../utils/constant";
 import from_csa from "../utils/from_csa";
+import newGameState from "../states/newGameState";
 
 type BoardProps = {
 };
@@ -63,13 +64,64 @@ const movePiece: (props: moveProps) => void = ({pieces, from, to, text, setPiece
 const Board: React.FC<BoardProps> = ({}: BoardProps) => {
     const [pieces, setPieces] = useRecoilState(pieceState)
     const [move, setMoves] = useRecoilState(moveState)
-    const [, setMyHandPieces] = useRecoilState(myHandPieceState)
+    const [myHandPieces, setMyHandPieces] = useRecoilState(myHandPieceState)
     const [, setYourHandPieces] = useRecoilState(yourHandPieceState)
     const [history, setHistory] = useRecoilState(historyState)
     const [modalConfig, setModalConfig] = useState<MyDialogProps | undefined>()
+    const [aiTurn, setAITurn] = useState<boolean>(false)
+    const [, setNewGame] = useRecoilState(newGameState)
 
     const getOnClick = (i: number, j: number, index: number) => {
         return async (event: MouseEvent) => {
+            let hand = "";
+            for (let k in myHandPieces) {
+                if (myHandPieces[k].isClicked) {
+                    hand = myHandPieces[k].name
+                }
+            }
+            if (hand !== "") {
+                // move from hand
+                if ((-1 in move) && (move[-1].includes(index))) {
+                    setPieces([
+                        ...pieces.slice(0, index),
+                        {
+                            text: hand,
+                            rotate: false,
+                            isClicked: false,
+                        },
+                        ...pieces.slice(index + 1),
+                    ])
+                    setMyHandPieces((prevMyHandPieces) => ({
+                        ...prevMyHandPieces,
+                        [hand]: {
+                            name: hand,
+                            count: prevMyHandPieces[hand].count - 1,
+                            isClicked: false,
+                        }
+                    }))
+
+                    // 記録する
+                    setHistory((prevHistory) => ([
+                        ...prevHistory,
+                        to_csa(-1, 9, i, j, hand)
+                    ]))
+                    
+                    // 移動を無効化
+                    setMoves({});
+                    setAITurn(true);
+                    return
+                } else {
+                    setMyHandPieces((prevMyHandPieces) => ({
+                        ...prevMyHandPieces,
+                        [hand]: {
+                            name: hand,
+                            count: prevMyHandPieces[hand].count,
+                            isClicked: false,
+                        }
+                    }))
+                    return
+                }
+            }
             // 既にクリックされているか
             let from = -1;
             for (let k = 0; k < pieces.length; k++) {
@@ -119,7 +171,7 @@ const Board: React.FC<BoardProps> = ({}: BoardProps) => {
             }
             // 成るか確認
             let fromName = pieces[from].text;
-            if (i < 3 && ['歩', '香', '桂', '銀', '角', '飛'].includes(fromName)) {
+            if ((i < 3 || Math.floor(from / 9) < 3) && ['歩', '香', '桂', '銀', '角', '飛'].includes(fromName)) {
                 const ret = await new Promise<string>((resolve) => {
                     setModalConfig({
                         onClose: resolve,
@@ -151,6 +203,7 @@ const Board: React.FC<BoardProps> = ({}: BoardProps) => {
             
             // 移動を無効化
             setMoves({});
+            setAITurn(true);
         }
     }
 
@@ -160,49 +213,96 @@ const Board: React.FC<BoardProps> = ({}: BoardProps) => {
             if (history.length === 0) {
                 return
             } 
-            console.log(API_URL, {moves: history});
-            const res = await axios.post(API_URL, {
-                moves: history
-            }, {headers: {
-	            'Access-Control-Allow-Origin': '*',
-            }});
-            const data = res.data;
-            console.log(data);
-            
-            const [oppFrom, oppTo, oppName] = from_csa(data.opponent_move)
-
-            if (pieces[oppFrom].text !== oppName && pieces[oppFrom].text !== unpromote(oppName)) {
+            if (!aiTurn) {
                 return
             }
+            setAITurn(false);
+            try {
+                const res = await axios.post(API_URL, {
+                    moves: history
+                }, {headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json',
+                }});
+                const data = res.data;
+                
+                const [oppFrom, oppTo, oppName, fromHand] = from_csa(data.opponent_move)
 
-            // 移動する
-            movePiece({
-                pieces: pieces,
-                from: oppFrom,
-                to: oppTo,
-                text: oppName,
-                setPieces: setPieces,
-                setHandPieces: setYourHandPieces,
-            })
-
-            // 記録する
-            setHistory((prevHistory) => ([
-                ...prevHistory,
-                data.opponent_move,
-            ]))
-
-            let movable: {[name: number]: number[]} = {};
-            for (const csa of data.next_moves) {
-                const [_from, _to] = from_csa(csa)
-                if (_from in movable) {
-                    movable[_from] = [...movable[_from], _to]
+                if (!fromHand) {
+                    if (pieces[oppFrom].text !== oppName && pieces[oppFrom].text !== unpromote(oppName)) {
+                        return
+                    }
+                    // 移動する
+                    movePiece({
+                        pieces: pieces,
+                        from: oppFrom,
+                        to: oppTo,
+                        text: oppName,
+                        setPieces: setPieces,
+                        setHandPieces: setYourHandPieces,
+                    })
                 } else {
-                    movable[_from] = [_to]
+                    if (pieces[oppTo].text !== '') {
+                        return
+                    }
+                    // 手札から消去
+                    setYourHandPieces((prevYourHandPieces) => ({
+                        ...prevYourHandPieces,
+                        [oppName]: {
+                            name: oppName,
+                            count: prevYourHandPieces[oppName].count - 1,
+                            isClicked: false,
+                        }
+                    }))
+                    // 盤面に配置
+                    setPieces([
+                        ...pieces.slice(0, oppTo),
+                        {
+                            text: oppName,
+                            rotate: true,
+                            isClicked: false,
+                        },
+                        ...pieces.slice(oppTo + 1),
+                    ])
                 }
+
+                // 記録する
+                setHistory((prevHistory) => ([
+                    ...prevHistory,
+                    data.opponent_move,
+                ]))
+
+                let movable: {[name: number]: number[]} = {};
+                for (const csa of data.next_moves) {
+                    const [_from, _to, _, _fromHand] = from_csa(csa)
+                    if (_fromHand) {
+                        if (-1 in movable) {
+                            movable[-1] = [...movable[-1], _to]
+                        } else {
+                            movable[-1] = [_to]
+                        }
+                    } else {
+                        if (_from in movable) {
+                            movable[_from] = [...movable[_from], _to]
+                        } else {
+                            movable[_from] = [_to]
+                        }
+                    }
+                }
+
+                setMoves(movable);
+            } catch {
+                const ret = await new Promise<string>((resolve) => {
+                    setModalConfig({
+                        onClose: resolve,
+                        title: 'ゲーム終了',
+                        message: 'ゲーム終了です'
+                    })
+                })
+                setNewGame(true);
+                setModalConfig(undefined)
+                return
             }
-
-            setMoves(movable);
-
         };
         f();
     }, [history])
