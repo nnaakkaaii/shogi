@@ -8,7 +8,7 @@ from pkg.policies.softmax import Softmax
 from pkg.utils.data import get_state_from_board
 from pkg.utils.select_action import SelectAction
 
-VERSION = '2.0.0'
+VERSION = '2.0.2'
 
 
 def handler(csa_moves):

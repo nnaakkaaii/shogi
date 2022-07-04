@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-interface PieceProps {
+export interface PieceProps {
   text: string,
   rotate: boolean,
   isClicked: boolean,

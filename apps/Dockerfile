@@ -9,8 +9,8 @@ COPY apps/src/handler.py ${LAMBDA_TASK_ROOT}/apps/src
 RUN mkdir -p ${LAMBDA_TASK_ROOT}/pkg
 COPY pkg ${LAMBDA_TASK_ROOT}/pkg
 
-RUN mkdir -p ${LAMBDA_TASK_ROOT}/kifu/2.0.0
-COPY kifu/2.0.0/net_last.pth ${LAMBDA_TASK_ROOT}/kifu/2.0.0
+RUN mkdir -p ${LAMBDA_TASK_ROOT}/kifu/2.0.2
+COPY kifu/2.0.2/net_last.pth ${LAMBDA_TASK_ROOT}/kifu/2.0.2
 
 # Install the function's dependencies using file requirements.txt
 # from your project folder.
