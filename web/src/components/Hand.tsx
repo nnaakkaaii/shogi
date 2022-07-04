@@ -96,14 +96,14 @@ const YourHandRow: FC<HandRowProps> = ({name}) => {
     return (
         <div key={name}>
             <HandSquare
-                text={name}
-                rotate={false}
+                text={yourHandPieces[name].count.toString()}
+                rotate={true}
                 onClick={() => {}}
                 isClicked={false}
             />
             <HandSquare
-                text={yourHandPieces[name].count.toString()}
-                rotate={false}
+                text={name}
+                rotate={true}
                 onClick={() => {}}
                 isClicked={false}
             />

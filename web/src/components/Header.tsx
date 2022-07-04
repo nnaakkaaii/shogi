@@ -2,7 +2,7 @@ import { Button, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import newGameState from '../states/newGameState';
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import React, { useCallback, useEffect } from 'react';
 import pieceState from '../states/pieceState';
 import { myHandPieceState, yourHandPieceState } from '../states/handPieceState';

@@ -14,14 +14,44 @@ const MyButton = styled(Button)({
     boxShadow: 'none',
     color: grey['900'],
     fontWeight: 'bold',
-    fontSize: '25px',
-    maxWidth: '50px',
-    maxHeight: '50px',
-    minWidth: '50px',
-    minHeight: '50px',
+    "@media (min-width:1200px)": {
+        maxWidth: '50px',
+        maxHeight: '50px',
+        minWidth: '50px',
+        minHeight: '50px',
+        fontSize: '25px',
+    },
+    "@media (min-width:992px) and (max-width:1200px)": {
+        maxWidth: '50px',
+        maxHeight: '50px',
+        minWidth: '50px',
+        minHeight: '50px',
+        fontSize: '25px',
+    },
+    "@media (min-width:768px) and (max-width:992px)": {
+        maxWidth: '32px',
+        maxHeight: '32px',
+        minWidth: '32px',
+        minHeight: '32px',
+        fontSize: '16px',
+    },
+    "@media (min-width:576px) and (max-width:768px)": {
+        maxWidth: '24px',
+        maxHeight: '24px',
+        minWidth: '24px',
+        minHeight: '24px',
+        fontSize: '12px',
+    },
+    "@media (max-width:576px)": {
+        maxWidth: '16px',
+        maxHeight: '16px',
+        minWidth: '16px',
+        minHeight: '16px',
+        fontSize: '8px',
+    },
     '&:hover': {
         backgroundColor: lime['100'],
-    }
+    },
 })
 
 const HandSquare: React.FC<SquareProps> = (props: SquareProps) => {

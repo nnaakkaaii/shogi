@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useState } from "react";
-import { errorSelector, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { myHandPieceState, Piece, yourHandPieceState } from "../states/handPieceState";
 import moveState from "../states/moveState";
 import pieceState, { PieceProps } from "../states/pieceState";
@@ -292,7 +292,7 @@ const Board: React.FC<BoardProps> = ({}: BoardProps) => {
 
                 setMoves(movable);
             } catch {
-                const ret = await new Promise<string>((resolve) => {
+                await new Promise<string>((resolve) => {
                     setModalConfig({
                         onClose: resolve,
                         title: 'ゲーム終了',

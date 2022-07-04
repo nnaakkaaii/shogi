@@ -1,4 +1,5 @@
 import Grid from "@mui/material/Grid";
+import { Box } from "@mui/system";
 import Board from "./Board";
 import { MyHand, YourHand } from "./Hand";
 
@@ -7,19 +8,38 @@ const Field = () => {
         <>
             <Grid
                 container
-                paddingX={'160px'}
                 paddingTop={'100px'}
             >
+                <Box
+                    sx={{
+                        width: {
+                          xs: '10px',
+                          sm: '50px',
+                          md: '100px',
+                          lg: '250px',
+                          xl: '300px',
+                        },
+                    }}
+                />
                 <Grid
                     item
                     xl={2}
-                    paddingRight={'30px'}
-                    paddingLeft={'90px'}
                     alignSelf={'flex-start'}
                     justifyContent={'flex-start'}
                 >
                     <YourHand />
                 </Grid>
+                <Box
+                    sx={{
+                        width: {
+                          xs: '5px',
+                          sm: '10px',
+                          md: '20px',
+                          lg: '30px',
+                          xl: '40px',
+                        },
+                    }}
+                />
                 <Grid
                     item
                     xl={8}
@@ -27,11 +47,20 @@ const Field = () => {
                 >
                     <Board />
                 </Grid>
+                <Box
+                    sx={{
+                        width: {
+                          xs: '5px',
+                          sm: '10px',
+                          md: '20px',
+                          lg: '30px',
+                          xl: '40px',
+                        },
+                    }}
+                />
                 <Grid
                     item
                     xl={2}
-                    paddingLeft={'30px'}
-                    paddingRight={'90px'}
                     alignSelf={'flex-end'}
                     justifySelf={'flex-end'}
                 >
