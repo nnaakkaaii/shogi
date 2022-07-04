@@ -7,10 +7,42 @@ import { myHandPieceState, yourHandPieceState } from "../states/handPieceState";
 import pieceState from "../states/pieceState";
 
 const MyBox = styled(Box)({
-    minWidth: '100px',
-    maxWidth: '100px',
-    minHeight: '350px',
-    maxHeight: '350px',
+    "@media (min-width:1200px)": {
+        maxWidth: '100px',
+        maxHeight: '350px',
+        minWidth: '100px',
+        minHeight: '350px',
+    },
+    "@media (min-width:992px) and (max-width:1200px)": {
+        maxWidth: '100px',
+        maxHeight: '350px',
+        minWidth: '100px',
+        minHeight: '350px',
+    },
+    "@media (min-width:768px) and (max-width:992px)": {
+        maxWidth: '64px',
+        maxHeight: '224px',
+        minWidth: '64px',
+        minHeight: '224px',
+    },
+    "@media (min-width:490px) and (max-width:768px)": {
+        maxWidth: '64px',
+        maxHeight: '224px',
+        minWidth: '64px',
+        minHeight: '224px',
+    },
+    "@media (min-width:400px) and (max-width:490px)": {
+        maxWidth: '56px',
+        maxHeight: '196px',
+        minWidth: '56px',
+        minHeight: '196px',
+    },
+    "@media (max-width:400px)": {
+        maxWidth: '46px',
+        maxHeight: '168px',
+        minWidth: '46px',
+        minHeight: '168px',
+    },
 });
 
 interface HandRowProps {

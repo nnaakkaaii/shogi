@@ -14,6 +14,7 @@ const MyButton = styled(Button)({
     boxShadow: 'none',
     color: grey['900'],
     fontWeight: 'bold',
+    padding: 0,
     "@media (min-width:1200px)": {
         maxWidth: '50px',
         maxHeight: '50px',
@@ -35,19 +36,26 @@ const MyButton = styled(Button)({
         minHeight: '32px',
         fontSize: '16px',
     },
-    "@media (min-width:576px) and (max-width:768px)": {
-        maxWidth: '24px',
+    "@media (min-width:490px) and (max-width:768px)": {
+        maxWidth: '32px',
+        maxHeight: '32px',
+        minWidth: '32px',
+        minHeight: '32px',
+        fontSize: '16px',
+    },
+    "@media (min-width:400px) and (max-width:490px)": {
+        maxWidth: '28px',
+        maxHeight: '28px',
+        minWidth: '28px',
+        minHeight: '28px',
+        fontSize: '14px',
+    },
+    "@media (max-width:400px)": {
+        maxWidth: '23px',
         maxHeight: '24px',
-        minWidth: '24px',
+        minWidth: '23px',
         minHeight: '24px',
         fontSize: '12px',
-    },
-    "@media (max-width:576px)": {
-        maxWidth: '16px',
-        maxHeight: '16px',
-        minWidth: '16px',
-        minHeight: '16px',
-        fontSize: '8px',
     },
     '&:hover': {
         backgroundColor: lime['100'],
