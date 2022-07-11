@@ -16,7 +16,7 @@ from pkg.utils.transition import Transition
 GAMMA = 0.7
 BATCH_SIZE = 1024
 VERBOSE_ITERATIONS = 1024 * 20
-VERSION = "2.0.0"
+VERSION = "2.0.4"
 SAVE_DIR = os.path.join('kifu', VERSION)
 HCP_DIR = os.path.join('kifu', 'hcp')
 
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     memory = ReplayMemory(10000)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     net = CNN().to(device)
-    optimizer = optim.RMSprop(net.parameters(), lr=1e-5)
+    optimizer = optim.RMSprop(net.parameters(), lr=2e-6)
     criterion = nn.CrossEntropyLoss().to(device)
     board = cshogi.Board()
     play_action = PlayAction()

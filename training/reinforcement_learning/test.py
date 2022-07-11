@@ -13,7 +13,7 @@ from pkg.policies.softmax import Softmax
 from pkg.utils.data import get_state_from_env
 from pkg.utils.select_action import SelectAction
 
-VERSION = "2.0.1"
+VERSION = "2.0.4"
 SAVE_DIR = os.path.join('kifu', VERSION)
 
 MAX_MOVES = 512

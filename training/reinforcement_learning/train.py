@@ -23,7 +23,7 @@ BATCH_SIZE = 512
 OPTIMIZE_PER_EPISODES = 2
 TARGET_UPDATE = 10
 MAX_MOVES = 512
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 SAVE_DIR = os.path.join('kifu', VERSION)
 
 
@@ -89,7 +89,7 @@ def train():
         policy_net.load_state_dict(state_dict)
         target_net.load_state_dict(state_dict)
 
-    num_episodes = 10000
+    num_episodes = 1000000
 
     for i_episode in range(num_episodes):
         # Initialize the environment and state
