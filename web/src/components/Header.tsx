@@ -1,4 +1,4 @@
-import { Button, Toolbar, Typography } from '@mui/material';
+import {Button, IconButton, Toolbar, Typography} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import newGameState from '../states/newGameState';
@@ -8,6 +8,7 @@ import pieceState from '../states/pieceState';
 import { myHandPieceState, yourHandPieceState } from '../states/handPieceState';
 import historyState from '../states/historyState';
 import moveState from '../states/moveState';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 const MyAppBar = styled(AppBar)({
     flexGrow: 1,
@@ -57,6 +58,9 @@ const Header = () => {
                 <MyTypography variant={"h6"}>
                     AI将棋
                 </MyTypography>
+                <IconButton href={"https://github.com/nnaakkaaii/shogi"} style={{paddingRight: '20px'}}>
+                    <GitHubIcon/>
+                </IconButton>
                 <MyButton color={"inherit"} onClick={onClickNewGame}>
                     新規ゲーム
                 </MyButton>

@@ -1,5 +1,26 @@
 # SHOGI
 
+将棋AIの学習・Lambdaへのデプロイ・ReactによるWebアプリ上でのプレイを行う
+
+* AIの学習
+  * 強化学習
+    * PyTorch
+    * DQN
+    * CNN
+  * 教師あり学習
+    * PyTorch
+* サーバーサイド
+  * APIサーバー
+    * FastAPI
+  * LambdaのRestAPI
+    * Lambda (Docker)
+* クライアントサイド
+  * React
+  * Recoil
+  * MUI (v5)
+
+![動作の様子](./docs/shogi.gif)
+
 ## 動作環境
 
 python3.9

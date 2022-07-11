@@ -14,7 +14,7 @@ const Field = () => {
                     sx={{
                         width: {
                           xs: '10px',
-                          sm: '50px',
+                          sm: '30px',
                           md: '100px',
                           lg: '250px',
                           xl: '300px',
@@ -32,29 +32,28 @@ const Field = () => {
                 <Box
                     sx={{
                         width: {
-                          xs: '5px',
-                          sm: '10px',
-                          md: '20px',
-                          lg: '30px',
-                          xl: '40px',
+                          xs: '10px',
+                          sm: '20px',
+                          md: '30px',
+                          lg: '50px',
+                          xl: '60px',
                         },
                     }}
                 />
                 <Grid
                     item
                     xl={8}
-                    paddingX={'30px'}
                 >
                     <Board />
                 </Grid>
                 <Box
                     sx={{
                         width: {
-                          xs: '5px',
-                          sm: '10px',
-                          md: '20px',
-                          lg: '30px',
-                          xl: '40px',
+                          xs: '10px',
+                          sm: '20px',
+                          md: '30px',
+                          lg: '50px',
+                          xl: '60px',
                         },
                     }}
                 />
